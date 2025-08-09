@@ -1,13 +1,14 @@
 # Use a multi-stage build to keep the final image small
 
 # Stage 1: Build the application
-# Using Eclipse Temurin JDK 17 on a Focal (Ubuntu 20.04) base for building
 FROM eclipse-temurin:17-jdk-focal AS build
 WORKDIR /app
 
 # Copy Maven wrapper files (if using Maven)
 COPY mvnw .
 COPY .mvn .mvn
+# Add execute permission to mvnw
+RUN chmod +x mvnw # <-- ADD THIS LINE
 
 # Copy pom.xml and build it to download dependencies (improves caching)
 COPY pom.xml .
@@ -20,7 +21,6 @@ COPY src ./src
 RUN ./mvnw clean install -DskipTests
 
 # Stage 2: Create the final lightweight runtime image
-# Using Eclipse Temurin JRE 17 on a Focal (Ubuntu 20.04) base for running
 FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
 
