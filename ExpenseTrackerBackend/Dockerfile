@@ -19,7 +19,7 @@ COPY src ./src
 RUN ./mvnw clean install -DskipTests
 
 # Stage 2: Create the final lightweight runtime image
-FROM openjdk:17-jre-slim
+FROM openjdk:17-jre-slim-buster # <-- CHANGED THIS LINE
 WORKDIR /app
 
 # Expose the port your Spring Boot app listens on (default is 8080)
