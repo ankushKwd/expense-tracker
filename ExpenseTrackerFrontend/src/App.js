@@ -19,7 +19,6 @@ const App = () => {
   );
   const [currentPageParams, setCurrentPageParams] = useState({});
 
-  // Effect to navigate if auth state changes
   useEffect(() => {
     if (!isLoggedIn && currentPage !== "login" && currentPage !== "register") {
       setCurrentPage("login");
