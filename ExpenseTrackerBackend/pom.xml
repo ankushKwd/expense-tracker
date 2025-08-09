@@ -71,4 +71,14 @@
 	        <scope>test</scope>
 	    </dependency>
 	</dependencies>
+	
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- This is often enough; ensures 'repackage' goal is bound to 'package' phase -->
+            </plugin>
+        </plugins>
+    </build>
 </project>
