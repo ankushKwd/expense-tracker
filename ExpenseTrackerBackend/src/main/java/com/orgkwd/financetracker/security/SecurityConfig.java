@@ -57,7 +57,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "https://expense-tracker-ten-beige-92.vercel.app/")); // Adjust for your frontend
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "null" "https://expense-tracker-ten-beige-92.vercel.app/")); // Adjust for your frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
