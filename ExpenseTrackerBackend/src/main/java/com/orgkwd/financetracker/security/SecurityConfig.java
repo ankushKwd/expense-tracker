@@ -60,7 +60,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "null",
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173","http://localhost:8081", "http://192.168.1.X:8081", "null",
                 "https://expense-tracker-ten-beige-92.vercel.app/")); // Adjust for your frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

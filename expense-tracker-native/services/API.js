@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const apiCall = async (
   url,
   method = "GET",
@@ -16,9 +18,19 @@ export const apiCall = async (
       body,
       headers,
     });
-    const response = await fetch(url, options);
+    let response;
+    if (method.toUpperCase() === "GET") {
+      response = await axios.get(url, { headers });
+    } else {
+      response = await axios({
+        url,
+        method,
+        data: body,
+        headers,
+      });
+    }
+    console.log("API call response:", response.status, response.data);
 
-    console.log("API call response status:", response);
     if (!response.ok) {
       const errorData = await response
         .json()
