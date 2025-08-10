@@ -38,26 +38,30 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Explicitly define DaoAuthenticationProvider bean for your custom UserDetailsService
+    // Explicitly define DaoAuthenticationProvider bean for your custom
+    // UserDetailsService
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService); // Inject your custom UserDetailsService
-        authProvider.setPasswordEncoder(passwordEncoder());    // Inject your PasswordEncoder
+        authProvider.setPasswordEncoder(passwordEncoder()); // Inject your PasswordEncoder
         return authProvider;
     }
 
-    // The AuthenticationManager is typically obtained from AuthenticationConfiguration
+    // The AuthenticationManager is typically obtained from
+    // AuthenticationConfiguration
     // and then used in AuthService. We keep this bean.
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "null" "https://expense-tracker-ten-beige-92.vercel.app/")); // Adjust for your frontend
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "null",
+                "https://expense-tracker-ten-beige-92.vercel.app/")); // Adjust for your frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -65,29 +69,31 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for REST APIs
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <-- ADD THIS LINE! This applies your CORS config.
-            .authorizeHttpRequests(authorize -> authorize
-                // Allow unauthenticated access to auth endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                // Allow authenticated users to get their own profile
-                .requestMatchers("/api/users/me").authenticated()
-                // Allow authenticated users to update their own profile
-                // This is the CRUCIAL line for your current issue
-                .requestMatchers("/api/users/{id}").authenticated() // More specific authorization can be added in controller
-                // Protect all other API endpoints
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll() // Allow all other requests (e.g., static content)
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions for JWT
-            )
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for REST APIs
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <-- ADD THIS LINE! This applies
+                                                                                   // your CORS config.
+                .authorizeHttpRequests(authorize -> authorize
+                        // Allow unauthenticated access to auth endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+                        // Allow authenticated users to get their own profile
+                        .requestMatchers("/api/users/me").authenticated()
+                        // Allow authenticated users to update their own profile
+                        // This is the CRUCIAL line for your current issue
+                        .requestMatchers("/api/users/{id}").authenticated() // More specific authorization can be added
+                                                                            // in controller
+                        // Protect all other API endpoints
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll() // Allow all other requests (e.g., static content)
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions for JWT
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
